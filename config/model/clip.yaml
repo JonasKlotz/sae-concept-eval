@@ -1,0 +1,4 @@
+name: CLIP
+backbone: ViT-L-14
+model_identifier: ${model.name}-${model.backbone}
+models_dir: ${root}/assets/models/

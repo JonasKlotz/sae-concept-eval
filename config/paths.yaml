@@ -1,0 +1,8 @@
+paths:
+  embedded_data_dir: ${outputs}/embedded_data/${dataset.name}/${model.model_identifier}/
+  learned_concepts_dir: ${outputs}/learned_concepts/${maybe_attrs:${dataset.name},${dataset.load_attrs}}/${model.model_identifier}/${seed}/${train_sae.run_name}
+  final_sae_path: ${outputs}/final_sae/${maybe_attrs:${dataset.name},${dataset.load_attrs}}/${model.model_identifier}/${seed}/${train_sae.run_name}.pt
+  trained_sae_dir: ${outputs}/trained_sae/${maybe_attrs:${dataset.name},${dataset.load_attrs}}/${model.model_identifier}/${seed}/${train_sae.run_name}
+  vis_dir: ${outputs}/vis/${maybe_attrs:${dataset.name},${dataset.load_attrs}}/${model.model_identifier}/${seed}/${train_sae.run_name}
+#  metrics_dir: ${outputs}/metrics/${dataset.name}/${model.model_identifier}/${seed}/${train_sae.run_name}
+  metrics_dir: ${outputs}/metrics/${maybe_attrs:${dataset.name},${dataset.load_attrs}}/${model.model_identifier}/${seed}/${train_sae.run_name}

@@ -1,0 +1,6 @@
+  model_type: random
+  device: ${device}
+  dict_size: 128  # 768/4
+  input_shape: 768
+  final_sae_path: ${paths.final_sae_path}
+  top_k: 32

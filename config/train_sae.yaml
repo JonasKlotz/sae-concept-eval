@@ -1,0 +1,9 @@
+train_sae:
+  use_wandb: true
+  run_name: ${sae.model_type}_${sae.dict_size}
+  wandb_project: SAEImg_clip_embeddings
+  epochs: 50
+  batch_size: 256
+  num_workers: 0
+  val_split: 0.2
+  test_split: 0.2

@@ -1,0 +1,11 @@
+name: "COCO"
+train_root: /scratch/htc/jklotz/data/COCO/train2017
+train_ann: /scratch/htc/jklotz/data/COCO/annotations_trainval2017/annotations/instances_train2017.json
+val_root: /scratch/htc/jklotz/data/COCO/val2017
+val_ann: /scratch/htc/jklotz/data/COCO/annotations_trainval2017/annotations/instances_val2017.json
+test_root: /scratch/htc/jklotz/data/COCO/test2017
+test_ann: /scratch/htc/jklotz/data/COCO/annotations_trainval2017/annotations/image_info_test-dev2017.json
+batch_size: 256
+num_workers: 0
+num_classes: 80
+load_attrs: False

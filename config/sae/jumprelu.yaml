@@ -1,0 +1,16 @@
+  model_type: jumprelu
+  device: ${device}
+  dict_size: 128
+  input_shape: 768
+  n_batches_to_dead: 20
+  l1_coeff: 0.001        # L0 penalty weight (JumpReLU uses learned thresholds, not top-k)
+  bandwidth: 0.001       # kernel bandwidth for pseudo-gradient
+  input_unit_norm: true
+  dtype: float32
+  lr: 5e-4
+  betas:
+    - 0.9
+    - 0.99
+  eps: 1e-08
+  weight_decay: 0.0
+  final_sae_path: ${paths.final_sae_path}

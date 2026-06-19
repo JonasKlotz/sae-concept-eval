@@ -1,0 +1,30 @@
+defaults:
+  - _self_
+  - dataset: cub.yaml         # can be overridden
+  - model: clip.yaml            # can be overridden
+  - sae: topk.yaml              # sae model config
+#  - sae_comparison: base.yaml
+  - train_sae   # training loop params
+  - paths
+
+  - experiment: null
+
+
+  - override hydra/hydra_logging: disabled
+  - override hydra/job_logging: disabled
+
+
+
+root: ${oc.env:PROJECT_ROOT}
+#outputs: /data/jonas/concepts/outputs
+#outputs: /home/jokl/PycharmProjects/rs_concepts/outputs
+outputs: /scratch/htc/jklotz/outputs/concept_xai
+device: ${get_device:}
+seed: ${oc.env:SEED, 42}
+debug : ${oc.env:DEBUG, false}
+embedding_dataloader_for_eval: "test" # can be "val" or "test"
+
+hydra:
+  output_subdir: null
+  run:
+    dir: .

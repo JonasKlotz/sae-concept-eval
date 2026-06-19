@@ -1,0 +1,6 @@
+name: CUB
+batch_size: 32
+path: /scratch/htc/jklotz/data/CUB
+stage: train
+num_classes: 200
+load_attrs: True
