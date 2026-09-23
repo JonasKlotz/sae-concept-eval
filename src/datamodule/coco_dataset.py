@@ -12,7 +12,9 @@ import torchvision
 from pycocotools.coco import COCO
 from torch.utils.data import Dataset
 
-SYN_COCO_PATH = "/scratch/htc/jklotz/data/syn_coco_dataset"
+from src.utils.paths import DATA_ROOT
+
+SYN_COCO_PATH = str(DATA_ROOT / "syn_coco_dataset")
 
 COCO_CLASSES = [
     "person",
@@ -435,7 +437,7 @@ class COCOSynDataset(Dataset):
 
 def main():
     dataset = COCOSynDataset(
-        root_dir=SYN_COCO_PATH,
+        root=SYN_COCO_PATH,
         transform=None,
         normalize=True,
     )

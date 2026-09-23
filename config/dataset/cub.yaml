@@ -1,6 +1,12 @@
 name: CUB
 batch_size: 32
-path: /scratch/htc/jklotz/data/CUB
+path: ${data_root}/CUB
 stage: train
 num_classes: 200
 load_attrs: True
+# paired synthetic benchmark used by TAPAScore
+syn:
+  name: syn_cub
+  hf_repo: jokl/syncub
+  revision: v1.0
+  local_path: null  # local copy of the HF repo; if null it is downloaded from the Hub

@@ -2,7 +2,6 @@ import os
 from collections import defaultdict
 
 import torch
-import sys
 import numpy as np
 from time import time
 from datetime import datetime
@@ -15,17 +14,13 @@ from omegaconf import DictConfig
 import rootutils
 
 root = rootutils.setup_root(__file__, dotenv=True, pythonpath=True, cwd=False)
-# Add the src directory to the Python path
-src_path = Path(root) / "src"
-if str(src_path) not in sys.path:
-    sys.path.append(str(src_path))
 
 from src.utils import resolvers  # noqa: F401 ensures resolver is registered
 from src.overcomplete.metrics import l0, hoyer, r2_score, relative_avg_l2_loss
 from src.utils.model_load_utils import  load_sae
 from src.utils.data_utils import load_embedding_datamodule
 
-from utils.data_utils import parse_batch
+from src.utils.data_utils import parse_batch
 
 
 @torch.no_grad()

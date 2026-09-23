@@ -16,7 +16,7 @@ def index_to_label_dict(dataset_name, data_path=(root / "data")) -> dict:
         # convert to dict
         label_dict = df.to_dict()["class_name"]
     elif dataset_name == "COCO":
-        from datamodule.coco_dataset import COCO_IDX2NAME
+        from src.datamodule.coco_dataset import COCO_IDX2NAME
 
         return COCO_IDX2NAME
     else:

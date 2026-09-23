@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import sys
 from pathlib import Path
 from pprint import pprint
 from typing import Dict, Any, List
@@ -22,15 +21,13 @@ from torchvision import transforms
 from tqdm import tqdm
 
 # project paths (match your setup)
-sys.path.append("/home/htc/jklotz/git/rs_concepts_public/src")
-sys.path.append("/home/htc/jklotz/git/rs_concepts_public/src")
 
 root = Path(rootutils.setup_root(__file__, dotenv=True, pythonpath=True, cwd=False))
 
 from src.utils import resolvers  # noqa: F401 ensures resolver is registered
 from src.scripts.classifier_for_syn_data.classifier import MultiLabelResNet50
-from datamodule.CUB_syn_dataset import CUBSyntheticDataset
-from datamodule.coco_dataset import COCOSynDataset
+from src.datamodule.CUB_syn_dataset import CUBSyntheticDataset
+from src.datamodule.coco_dataset import COCOSynDataset
 
 
 def build_transforms(train: bool) -> transforms.Compose:
@@ -335,9 +332,7 @@ def load_best_classifier(cfg: DictConfig) -> None:
     dataset_name = str(cfg.dataset.name)
     out_root = Path(cfg.outputs) / "classifier" / dataset_name.lower()
     ckpt_dir = out_root / "checkpoints"
-    out_root = (
-        Path("/home/htc/jklotz/git/rs_concepts/plots/classifier") / dataset_name.lower()
-    )
+    out_root = Path(cfg.outputs) / "figures" / "classifier" / dataset_name.lower()
 
     val_transform = build_transforms(train=False)
     if cfg.dataset.name == "CUB":

@@ -12,12 +12,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from scripts.visualization.fig_matching_over_dictsizes import _marker_for_metric
-from scripts.visualization.plot_utils.plot_data_utils import (
+from src.scripts.visualization.fig_matching_over_dictsizes import _marker_for_metric
+from src.scripts.visualization.plot_utils.plot_data_utils import (
     load_perturbation_dataframe,
     nonsyn_for_syn,
 )
-from scripts.visualization.plot_utils.plot_utils import (
+from src.scripts.visualization.plot_utils.plot_utils import (
     pretty_sae_family,
     pretty_metric_name,
     get_metric_color,
@@ -25,6 +25,7 @@ from scripts.visualization.plot_utils.plot_utils import (
     save_legend_strip,
     compute_shared_ylim,
 )
+from src.utils.paths import FIGURES_ROOT, METRICS_ROOT
 
 
 # ----------------------------
@@ -318,8 +319,8 @@ def fig_tapas_over_dictsizes():
     saes_main = ("batchtopk", "matryoshka", "topk", "jumprelu")
     saes_all = ("batchtopk", "matryoshka", "topk", "jumprelu", "frozen", "random")
 
-    metrics_root = "/home/jokl/PycharmProjects/rs_concepts/outputs/metrics"
-    figures_dir = Path("/home/jokl/PycharmProjects/rs_concepts/outputs/figures")
+    metrics_root = str(METRICS_ROOT)
+    figures_dir = FIGURES_ROOT
     out_dir = figures_dir / "fig_perturbation_over_dictsize"
     appendix_dir = figures_dir / "appendix" / "fig_perturbation_over_dictsize_nnomp"
     out_dir.mkdir(parents=True, exist_ok=True)

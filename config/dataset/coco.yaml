@@ -1,11 +1,18 @@
 name: "COCO"
-train_root: /scratch/htc/jklotz/data/COCO/train2017
-train_ann: /scratch/htc/jklotz/data/COCO/annotations_trainval2017/annotations/instances_train2017.json
-val_root: /scratch/htc/jklotz/data/COCO/val2017
-val_ann: /scratch/htc/jklotz/data/COCO/annotations_trainval2017/annotations/instances_val2017.json
-test_root: /scratch/htc/jklotz/data/COCO/test2017
-test_ann: /scratch/htc/jklotz/data/COCO/annotations_trainval2017/annotations/image_info_test-dev2017.json
+train_root: ${data_root}/COCO/train2017
+train_ann: ${data_root}/COCO/annotations_trainval2017/annotations/instances_train2017.json
+val_root: ${data_root}/COCO/val2017
+val_ann: ${data_root}/COCO/annotations_trainval2017/annotations/instances_val2017.json
+test_root: ${data_root}/COCO/test2017
+test_ann: ${data_root}/COCO/annotations_trainval2017/annotations/image_info_test-dev2017.json
 batch_size: 256
 num_workers: 0
 num_classes: 80
 load_attrs: False
+# paired synthetic benchmark used by TAPAScore
+syn:
+  name: syn_coco
+  hf_repo: jokl/syncoco
+  # pinned to v1.0, the original release; v2.0 is a later revision with ~30 more pairs
+  revision: v1.0
+  local_path: null  # local copy of the HF repo; if null it is downloaded from the Hub

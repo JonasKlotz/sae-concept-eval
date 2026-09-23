@@ -8,10 +8,10 @@ pixels (CUB is pixel-exact; COCO is checked within a small decode tolerance).
 Usage::
 
     python src/scripts/hf_export/verify_hf_export.py \
-        --cub-src /scratch/htc/jklotz/data/syn_cub_dataset \
-        --cub-hf  /scratch/htc/jklotz/data/hf_export/syncub \
-        --coco-src /scratch/htc/jklotz/data/syn_coco_dataset \
-        --coco-hf  /scratch/htc/jklotz/data/hf_export/syncoco \
+        --cub-src $DATA_ROOT/syn_cub_dataset \
+        --cub-hf  $DATA_ROOT/hf_export/syncub \
+        --coco-src $DATA_ROOT/syn_coco_dataset \
+        --coco-hf  $DATA_ROOT/hf_export/syncoco \
         --n 100
 """
 
@@ -24,11 +24,11 @@ import rootutils
 import torch
 
 _root = rootutils.setup_root(__file__, dotenv=True, pythonpath=True, cwd=False)
-sys.path.insert(0, str(Path(_root) / "src"))
 
-from datamodule.CUB_syn_dataset import CUBSyntheticDataset
-from datamodule.coco_dataset import COCOSynDataset
-from datamodule.hf_syn_datasets import SynCUBHFDataset, SynCOCOHFDataset
+from src.datamodule.CUB_syn_dataset import CUBSyntheticDataset
+from src.datamodule.coco_dataset import COCOSynDataset
+from src.datamodule.hf_syn_datasets import SynCUBHFDataset, SynCOCOHFDataset
+from src.utils.paths import DATA_ROOT
 
 
 def _sample_indices(n_total: int, n: int) -> list[int]:
@@ -104,10 +104,10 @@ def verify_coco(src: str, hf: str, n: int, tol: float = 2.0 / 255.0) -> bool:
 
 def main() -> None:
     p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument("--cub-src", default="/scratch/htc/jklotz/data/syn_cub_dataset")
-    p.add_argument("--cub-hf", default="/scratch/htc/jklotz/data/hf_export/syncub")
-    p.add_argument("--coco-src", default="/scratch/htc/jklotz/data/syn_coco_dataset")
-    p.add_argument("--coco-hf", default="/scratch/htc/jklotz/data/hf_export/syncoco")
+    p.add_argument("--cub-src", default=str(DATA_ROOT / "syn_cub_dataset"))
+    p.add_argument("--cub-hf", default=str(DATA_ROOT / "hf_export" / "syncub"))
+    p.add_argument("--coco-src", default=str(DATA_ROOT / "syn_coco_dataset"))
+    p.add_argument("--coco-hf", default=str(DATA_ROOT / "hf_export" / "syncoco"))
     p.add_argument("--n", type=int, default=100, help="Number of pairs to spot-check per dataset.")
     p.add_argument("--skip-cub", action="store_true")
     p.add_argument("--skip-coco", action="store_true")

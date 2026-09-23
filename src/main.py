@@ -1,8 +1,5 @@
-import sys
 
 
-sys.path.append("/home/htc/jklotz/git/rs_concepts_public")
-sys.path.append("/home/htc/jklotz/git/rs_concepts_public/src")
 
 from pathlib import Path
 from pprint import pprint
@@ -39,19 +36,22 @@ DEBUG = False
 
 
 def calculate_all_metrics(cfg):
+    stages = cfg.stages
     # calculate SOTA metrics
-    run_calculate_cknna(cfg)
-    run_calculate_fms(cfg)
-    run_calculate_monosemanticity(cfg)
-
+    if stages.baseline_metrics:
+        run_calculate_cknna(cfg)
+        run_calculate_fms(cfg)
+        run_calculate_monosemanticity(cfg)
 
     # calculate our metrics
-    run_calculate_matching_metrics(cfg)
-    run_tapas(cfg)
+    if stages.matching:
+        run_calculate_matching_metrics(cfg)
+    if stages.tapas:
+        run_tapas(cfg)
 
-    # # # #
-    # # Visualizations
-    vis_topk_images_per_concept(cfg)
+    # Visualizations
+    if stages.visualize:
+        vis_topk_images_per_concept(cfg)
 
 
 @hydra.main(
@@ -63,12 +63,11 @@ def main(cfg: DictConfig):
     print("Running main with config:")
     pprint(OmegaConf.to_container(cfg, resolve=True))
 
-    embed_images(
-        cfg,
-    )
-    print("Image embedding done")
-    train_with_lightning(cfg)
-    # # # #
+    if cfg.stages.embed:
+        embed_images(cfg)
+        print("Image embedding done")
+    if cfg.stages.train:
+        train_with_lightning(cfg)
 
     calculate_all_metrics(cfg)
 

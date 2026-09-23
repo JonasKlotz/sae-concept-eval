@@ -2,7 +2,7 @@ import pytorch_lightning as pl
 import torch
 from torch.utils.data import DataLoader
 
-from datamodule.coco_dataset import COCODataset, collate_fn
+from src.datamodule.coco_dataset import COCODataset, collate_fn
 from torch.utils.data import random_split
 
 

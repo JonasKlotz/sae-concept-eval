@@ -8,7 +8,7 @@ import rootutils
 
 root = rootutils.setup_root(__file__, dotenv=True, pythonpath=True, cwd=False)
 
-from utils import resolvers  # noqa: F401 ensures resolver is registered
+from src.utils import resolvers  # noqa: F401 ensures resolver is registered
 
 SHOW_PLOTS = True  # set to False when running in batch/headless mode
 
@@ -21,7 +21,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import torch
 
-from scripts.visualization.plot_utils.plot_utils import (
+from src.scripts.visualization.plot_utils.plot_utils import (
     COLORS,
     pretty_sae_family,
     pretty_metric_name,
@@ -30,11 +30,12 @@ from scripts.visualization.plot_utils.plot_utils import (
     save_legend_strip,
     compute_shared_ylim,
 )
-from scripts.visualization.plot_utils.plot_data_utils import (
+from src.scripts.visualization.plot_utils.plot_data_utils import (
     load_nested_pt_tree,
     keep_ground_truth_per_method,
     calc_matching_score_over_all_attrs_df,
 )
+from src.utils.paths import FIGURES_ROOT, METRICS_ROOT
 
 
 # ----------------------------
@@ -251,8 +252,8 @@ def plot_matching_vs_dictsize_df(
 # ----------------------------
 
 def fig_matching_over_dictsizes():
-    metrics_root = "/home/jokl/PycharmProjects/rs_concepts/outputs/metrics"
-    figures_dir = Path("/home/jokl/PycharmProjects/rs_concepts/outputs/figures")
+    metrics_root = str(METRICS_ROOT)
+    figures_dir = FIGURES_ROOT
     appendix_dir = figures_dir / "appendix" / "fig_matching_over_dictsizes_nnomp"
     loaded = load_nested_pt_tree(metrics_root)
 

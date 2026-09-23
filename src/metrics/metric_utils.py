@@ -9,7 +9,7 @@ from torch.nn import Module
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 
-from utils.data_utils import parse_batch
+from src.utils.data_utils import parse_batch
 
 
 def extract_concept_matrix(
@@ -22,29 +22,30 @@ def extract_concept_matrix(
     unsparse_concept_matrix = torch.zeros((N, D), device=cfg.device)
     embedding_matrix = None
 
-    for idx, batch in enumerate(tqdm(data_loader, desc="Concept Extraction")):
+    start = 0  # running row offset; the last batch may be smaller than the rest
+    for batch in tqdm(data_loader, desc="Concept Extraction"):
         batch_dict = parse_batch(batch, dataset_name=cfg.dataset.name, embedding=True)
         embeddings = batch_dict["features"]
 
         labels = batch_dict["labels"]
         embeddings = embeddings.to(cfg.device)
         labels = labels.to(cfg.device)
-        batch_size = embeddings.shape[0]
+        end = start + embeddings.shape[0]
 
         # get the SAE output
         with torch.no_grad():
             codes, codes_pre_sparsification = sae.encode(embeddings)
 
         # codes is the output of the SAE encoder, shape (N, D)
-        concept_matrix[idx * batch_size : (idx + 1) * batch_size, :] = codes
-        unsparse_concept_matrix[idx * batch_size : (idx + 1) * batch_size, :] = (
+        concept_matrix[start:end, :] = codes
+        unsparse_concept_matrix[start:end, :] = (
             codes_pre_sparsification
         )
         if return_embedding:
             if embedding_matrix is None:
                 E = embeddings.shape[1]
                 embedding_matrix = torch.zeros((N, E), device=cfg.device)
-            embedding_matrix[idx * batch_size : (idx + 1) * batch_size, :] = embeddings
+            embedding_matrix[start:end, :] = embeddings
 
         # fill the ground truth concept matrix
         # size depends on whether we use attr or labels
@@ -52,9 +53,10 @@ def extract_concept_matrix(
             C = labels.shape[-1]
             ground_truth_concept_matrix = torch.zeros((N, C), device=cfg.device)
 
-        ground_truth_concept_matrix[idx * batch_size : (idx + 1) * batch_size, :] = (
+        ground_truth_concept_matrix[start:end, :] = (
             labels
         )
+        start = end
 
     # to numpy
     concept_matrix = concept_matrix.numpy(force=True)

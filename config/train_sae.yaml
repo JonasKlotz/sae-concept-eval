@@ -1,5 +1,6 @@
 train_sae:
-  use_wandb: true
+  use_wandb: false  # log to wandb in addition to the CSV logger
+  wandb_mode: online  # online / offline
   run_name: ${sae.model_type}_${sae.dict_size}
   wandb_project: SAEImg_clip_embeddings
   epochs: 50

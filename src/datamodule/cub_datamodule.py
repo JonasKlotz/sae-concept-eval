@@ -16,6 +16,7 @@ from torch.utils.data import DataLoader
 
 # Set up project root
 project_root = rootutils.setup_root(__file__, dotenv=True, pythonpath=True, cwd=False)
+from src.utils.paths import DATA_ROOT  # noqa: E402
 
 
 class CUBDataset(Dataset):
@@ -377,5 +378,5 @@ class CUBDataModule(pl.LightningDataModule):
 
 
 if __name__ == "__main__":
-    cub_dataset = CUBDataset(root="/home/jokl/data/CUB")
+    cub_dataset = CUBDataset(root=DATA_ROOT / "CUB")
     print()

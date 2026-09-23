@@ -5,7 +5,7 @@ import numpy as np
 import torch
 from omegaconf import DictConfig
 
-from overcomplete.sae.matryoshka_sae import RandomSAE, FrozenEncoderSAE
+from src.overcomplete.sae.matryoshka_sae import RandomSAE, FrozenEncoderSAE
 from src.overcomplete import SAE
 from src.overcomplete.sae.matryoshka_sae import (
     GlobalBatchTopKMatryoshkaSAE,

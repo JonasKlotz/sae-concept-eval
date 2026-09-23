@@ -18,7 +18,7 @@ import numpy as np
 from numpy.typing import NDArray
 from typing import Any, Tuple
 
-from metrics.fms.fml_helpers import (
+from src.metrics.fms.fml_helpers import (
     load_tree_stats_data,
     load_local_tree_stats_data,
 )
@@ -38,8 +38,8 @@ from src.utils.data_utils import (
     get_eval_emb_dataloader,
     parse_batch,
 )
-from metrics.fms.tree_loader import get_root_node, get_tree_stats
-from metrics.metric_utils import extract_concept_matrix
+from src.metrics.fms.tree_loader import get_root_node, get_tree_stats
+from src.metrics.metric_utils import extract_concept_matrix
 
 
 def compute_fms(cfg, data_loader, sae):

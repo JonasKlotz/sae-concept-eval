@@ -19,7 +19,7 @@ from torchmetrics.classification import (
 
 import torchvision.models as tvm
 
-from utils.data_utils import parse_batch
+from src.utils.data_utils import parse_batch
 
 
 class MultiLabelResNet50(pl.LightningModule):

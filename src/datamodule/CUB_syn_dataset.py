@@ -14,11 +14,13 @@ from torch import Tensor
 from torch.utils.data import Dataset
 from torchvision import transforms
 
-from datamodule.cub_datamodule import CUBDataset
+from src.datamodule.cub_datamodule import CUBDataset
 
 # Set up project root
 project_root = rootutils.setup_root(__file__, dotenv=True, pythonpath=True, cwd=False)
-SYN_CUB_ROOT = "/scratch/htc/jklotz/data/syn_cub_dataset"
+from src.utils.paths import DATA_ROOT  # noqa: E402
+
+SYN_CUB_ROOT = str(DATA_ROOT / "syn_cub_dataset")
 
 
 def load_replacement_attrs(replacement_attrs: Path) -> dict[Any, Any]:
@@ -209,7 +211,7 @@ if __name__ == "__main__":
     )
 
     dataset = CUBSyntheticDataset(
-        root="/scratch/htc/jklotz/data/syn_cub_dataset",
+        root=SYN_CUB_ROOT,
         transform=transform,
     )
     for i in range(50):

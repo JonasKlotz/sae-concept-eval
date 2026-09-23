@@ -14,7 +14,7 @@ from tqdm import tqdm
 import rootutils
 import pandas as pd
 
-from models.new_sae_lightning import LitSparseAutoencoder
+from src.models.new_sae_lightning import LitSparseAutoencoder
 
 # Set up project root
 project_root = Path(
@@ -52,18 +52,20 @@ def compute_monosemanticity_wrapper(cfg, embedding_data_loader, sae):
 
     # extract concept strengths
     concept_matrix = torch.zeros((N, D), device=cfg.device)
-    for idx, batch in enumerate(tqdm(embedding_data_loader, desc="Concept Extraction")):
+    start = 0  # running row offset; the last batch may be smaller than the rest
+    for batch in tqdm(embedding_data_loader, desc="Concept Extraction"):
         batch_dict = parse_batch(batch, dataset_name=cfg.dataset.name, embedding=True)
         embeddings = batch_dict["features"]
         embeddings = embeddings.to(cfg.device)
-        batch_size = embeddings.shape[0]
+        end = start + embeddings.shape[0]
 
         # get the SAE output
         with torch.no_grad():
             codes, _ = sae.encode(embeddings)
 
         # codes is the output of the SAE encoder, shape (N, D)
-        concept_matrix[idx * batch_size : (idx + 1) * batch_size, :] = codes
+        concept_matrix[start:end, :] = codes
+        start = end
 
     return compute_monosemanticity(embedding_matrix, concept_matrix, device=cfg.device)
 

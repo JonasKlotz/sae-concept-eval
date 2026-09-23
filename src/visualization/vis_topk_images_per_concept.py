@@ -1,10 +1,7 @@
 import os
-import sys
 
-from metrics.metric_utils import extract_concept_matrix
+from src.metrics.metric_utils import extract_concept_matrix
 
-sys.path.append("/home/htc/jklotz/git/rs_concepts_public/src")
-sys.path.append("/home/htc/jklotz/git/rs_concepts_public/src")
 
 from pathlib import Path
 from typing import Dict, List
@@ -24,8 +21,8 @@ project_root = Path(
 )
 
 
-from metrics.calculate_metrics_gt_concept import calculate_gt_metric
-from visualization.vis_utils import index_to_label_dict
+from src.metrics.calculate_metrics_gt_concept import calculate_gt_metric
+from src.visualization.vis_utils import index_to_label_dict
 
 
 from src.utils import resolvers  # noqa: F401 ensures resolver is registered
@@ -35,7 +32,7 @@ from src.utils.model_load_utils import (
     extract_concept_strengths,
     load_sae,
 )
-from utils.data_utils import (
+from src.utils.data_utils import (
     load_image_datamodule,
     parse_batch,
     load_embedding_datamodule,

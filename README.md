@@ -49,9 +49,20 @@ The matching benchmarks use:
 - **CUB** — 312 binary attributes per image.
 - **COCO** — multi-label object categories.
 
-Point the dataset configs (`config/dataset/{cub,coco}.yaml`) at your local copies
-of the data. Outputs (embeddings, trained SAEs, metrics, visualizations) are
-written under the `outputs` root configured in `config/paths.yaml`.
+Data is read from `DATA_ROOT` (default `<repo>/data`) and all outputs (embeddings,
+trained SAEs, metrics, visualizations) are written under `OUTPUTS_DIR` (default
+`<repo>/outputs`). Set them as environment variables or in a `.env` file in the
+repo root:
+
+```
+DATA_ROOT=/path/to/data
+OUTPUTS_DIR=/path/to/outputs
+```
+
+or override per run on the command line (`data_root=... outputs=...`). The
+expected layout under `DATA_ROOT` is `CUB/` (the extracted `CUB_200_2011`) and
+`COCO/{train2017,val2017,annotations_trainval2017/annotations}`; see
+`config/dataset/{cub,coco}.yaml`.
 
 ### Base CUB / COCO
 
@@ -72,7 +83,7 @@ Each repo ships `images/`, a `metadata.csv`, and a self-contained PyTorch `Datas
 ```
 # CLI download (whole repo at a tagged version)
 hf download jokl/syncub  --repo-type dataset --revision v1.0 --local-dir data/syncub
-hf download jokl/syncoco --repo-type dataset --revision v2.0 --local-dir data/syncoco
+hf download jokl/syncoco --repo-type dataset --revision v1.0 --local-dir data/syncoco
 ```
 
 ```
@@ -84,24 +95,43 @@ from syncub_dataset import SynCUBDataset            # shipped inside the repo
 ds = SynCUBDataset(root)
 ```
 
+The TAPAScore stage loads them automatically: by default it downloads the
+revision pinned in `config/dataset/{cub,coco}.yaml` (`dataset.syn.revision`)
+from the Hub. Both are pinned to `v1.0`; synCOCO `v2.0` is a later revision with
+slightly more pairs (select it with `dataset.syn.revision=v2.0`). To use a local
+copy instead, set `dataset.syn.local_path`:
+
+```
+python src/main.py dataset=cub dataset.syn.local_path=data/syncub
+```
+
 The exported datasets can also be (re)built from local source data with the
 scripts under `src/scripts/hf_export/` (`export_syncub_hf.py`, `export_syncoco_hf.py`).
 
 ## Usage
 
-The pipeline is driven by Hydra through `src/main.py`. Stages are toggled by
-(un)commenting them in `main()`.
+The pipeline is driven by Hydra through `src/main.py`. Each stage can be switched
+off from the command line via the `stages` group in `config/base.yaml`
+(`embed`, `train`, `baseline_metrics`, `matching`, `tapas`, `visualize`).
+Embedding and training are skipped automatically if their outputs already exist.
 
 ```
 # 1. Embed images (standalone script)
 python src/scripts/calculate_embeddings_for_images.py dataset=cub model=clip
 
-# 2. Train an SAE
-python src/main.py dataset=cub model=clip sae=topk sae.dict_size=256
+# 2. Train an SAE only
+python src/main.py dataset=cub model=clip sae=topk sae.dict_size=256 \
+    stages.baseline_metrics=false stages.matching=false stages.tapas=false stages.visualize=false
 
-# 3. Compute matching + perturbation metrics
+# 3. Full pipeline (embed -> train -> all metrics)
 python src/main.py dataset=cub model=clip sae=topk sae.dict_size=256
 ```
+
+Training logs to CSV; add `train_sae.use_wandb=true` to also log to Weights & Biases.
+
+The figure scripts under `src/scripts/visualization/` read metrics from
+`$OUTPUTS_DIR/metrics` and write to `$OUTPUTS_DIR/figures`; run them from the repo
+root as modules, e.g. `python -m src.scripts.visualization.plot_all`.
 
 **Models:** `clip` (ViT-L-14, primary), `dinov2` (ViT-S-14). **SAE variants:** `topk`, `batchtopk`, `matryoshka`, `jumprelu`, plus `random` and `frozen` baselines.
 

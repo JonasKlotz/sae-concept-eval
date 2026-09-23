@@ -9,10 +9,8 @@ pipeline as the SAE experiments.  Results land in:
   metrics/{dataset}/{model}/{seed}/linear_probe/pert/           ← same CSV columns as SAE
 """
 
-import sys
 from pathlib import Path
 
-sys.path.append("/home/htc/jklotz/git/rs_concepts_public/src")
 
 import hydra
 import numpy as np
@@ -28,8 +26,7 @@ project_root = Path(
 )
 from src.utils import resolvers  # noqa: F401
 
-from src.datamodule.CUB_syn_dataset import CUBSyntheticDataset
-from src.datamodule.coco_dataset import COCOSynDataset
+from src.datamodule.hf_syn_datasets import load_syn_dataset
 from src.metrics.calculate_metrics_targeted_perturbation import (
     calculate_perturbation_metric_cub,
     calculate_perturbation_metric_coco,
@@ -204,25 +201,16 @@ def run_probe_metrics(cfg: DictConfig):
     image_encoder, _, _ = get_image_encoder(cfg.model, device=cfg.device)
     transform_img = T.Compose([*image_encoder.preprocess.transforms])
 
-    data_root = Path("/data/jonas/datasets/")
-    if not data_root.exists():
-        data_root = Path("/scratch/htc/jklotz/data")
-
+    syn_dataset = load_syn_dataset(cfg.dataset.syn, cfg.dataset.name, transform=transform_img)
     if cfg.dataset.name == "CUB":
-        syn_dataset = CUBSyntheticDataset(
-            root=data_root / "syn_cub_dataset", transform=transform_img
-        )
         calculate_perturbation_metric_func = calculate_perturbation_metric_cub
     else:
-        syn_dataset = COCOSynDataset(
-            root=data_root / "syn_coco_dataset", transform=transform_img
-        )
         calculate_perturbation_metric_func = calculate_perturbation_metric_coco
 
     probe_adapter = ProbeAsLatent(probe)
 
     cfg = cfg.copy()
-    cfg.dataset.name = "syn_cub" if cfg.dataset.name == "CUB" else "syn_coco"
+    cfg.dataset.name = cfg.dataset.syn.name
 
     loaded_results = load_metric_results(gt_dir)
 

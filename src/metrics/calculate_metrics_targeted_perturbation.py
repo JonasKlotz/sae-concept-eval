@@ -1,14 +1,11 @@
 import os
-import sys
 from typing import Dict, Any, Sequence
 
 from torch import device
 from torch.nn import functional as F
-sys.path.append("/home/htc/jklotz/git/rs_concepts_public/src")
-sys.path.append("/home/htc/jklotz/git/rs_concepts_public/src")
 
-from datamodule.coco_dataset import COCOSynDataset
-from metrics.metric_utils import load_metric_results, as_index_tensor
+from src.datamodule.hf_syn_datasets import load_syn_dataset
+from src.metrics.metric_utils import load_metric_results, as_index_tensor
 
 
 import hydra
@@ -30,9 +27,8 @@ project_root = Path(
 
 from src.utils import resolvers  # noqa: F401 ensures resolver is registered
 from src.utils.model_load_utils import load_sae, get_image_encoder
-from src.utils.data_utils import load_embedding_datamodule
+from src.utils.data_utils import load_embedding_datamodule, get_eval_emb_dataloader
 from src.metrics.calculate_metrics_gt_concept import calculate_gt_metric
-from src.datamodule.CUB_syn_dataset import CUBSyntheticDataset
 from src.metrics.metric_utils import get_topk_matching
 
 
@@ -415,29 +411,14 @@ def run_tapas(cfg: DictConfig):
         cfg.model,
         device=cfg.device,
     )
-    data_module = load_embedding_datamodule(cfg)
-    data_module.setup()
-    train_loader = data_module.train_dataloader()
-
     preprocess = image_encoder.preprocess.transforms
     transform_img = T.Compose([*preprocess])
 
-    data_root = Path("/data/jonas/datasets/")
-    if not data_root.exists():
-        data_root = Path("/scratch/htc/jklotz/data")
-
+    syn_dataset = load_syn_dataset(cfg.dataset.syn, cfg.dataset.name, transform=transform_img)
+    syn_dataset_name = cfg.dataset.syn.name
     if cfg.dataset.name == "CUB":
-        syn_dataset = CUBSyntheticDataset(
-            root=data_root/ "syn_cub_dataset",
-            transform=transform_img)
-        syn_dataset_name = "syn_cub"
         calculate_perturbation_metric_func = calculate_perturbation_metric_cub
     else:
-        syn_dataset = COCOSynDataset(
-            root= data_root/ "syn_coco_dataset",
-            transform=transform_img,
-        )
-        syn_dataset_name = "syn_coco"
         calculate_perturbation_metric_func = calculate_perturbation_metric_coco
     ########################################################################
 
@@ -445,8 +426,14 @@ def run_tapas(cfg: DictConfig):
     if matching_dir.exists():
         results = load_metric_results(matching_dir)
     else:
+        # same split as run_calculate_matching_metrics, so both stages agree
         print("Calculating ground-truth matching metrics... as they do not exist yet.")
-        results = calculate_gt_metric(cfg, sae, train_loader)
+        data_module = load_embedding_datamodule(cfg)
+        data_module.setup()
+        eval_loader = get_eval_emb_dataloader(
+            data_module, cfg.get("embedding_dataloader_for_eval", "test")
+        )
+        results = calculate_gt_metric(cfg, sae, eval_loader, metrics_dir=matching_dir)
     ########################################################################
     # results = calculate_gt_metric(cfg, sae, train_loader, compute_bmp=False)
 

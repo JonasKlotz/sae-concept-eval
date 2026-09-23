@@ -16,13 +16,22 @@ defaults:
 
 
 root: ${oc.env:PROJECT_ROOT}
-#outputs: /data/jonas/concepts/outputs
-#outputs: /home/jokl/PycharmProjects/rs_concepts/outputs
-outputs: /scratch/htc/jklotz/outputs/concept_xai
+# Override via env vars (or a .env file in the repo root), or on the CLI: outputs=/path data_root=/path
+outputs: ${oc.env:OUTPUTS_DIR,${root}/outputs}
+data_root: ${oc.env:DATA_ROOT,${root}/data}
 device: ${get_device:}
 seed: ${oc.env:SEED, 42}
 debug : ${oc.env:DEBUG, false}
 embedding_dataloader_for_eval: "test" # can be "val" or "test"
+
+# pipeline stages run by src/main.py; disable on the CLI, e.g. stages.visualize=false
+stages:
+  embed: true
+  train: true
+  baseline_metrics: true  # CKNNA, FMS, monosemanticity
+  matching: true          # F1 / FBMP / nnomp matching
+  tapas: true             # TAPAScore on synCUB / synCOCO
+  visualize: true
 
 hydra:
   output_subdir: null

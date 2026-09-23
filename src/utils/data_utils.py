@@ -4,7 +4,7 @@ from typing import Dict, Any
 
 import torch
 
-from datamodule.embedding_datamodule import EmbeddingDataModule
+from src.datamodule.embedding_datamodule import EmbeddingDataModule
 
 
 def load_image_datamodule(

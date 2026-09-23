@@ -5,10 +5,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-from datamodule.CUB_syn_dataset import CUBSyntheticDataset
-from datamodule.coco_dataset import COCOSynDataset
+from src.datamodule.CUB_syn_dataset import CUBSyntheticDataset
+from src.datamodule.coco_dataset import COCOSynDataset
+from src.utils.paths import FIGURES_ROOT, DATA_ROOT
 
-OUT_DIR = Path("/home/jokl/PycharmProjects/rs_concepts/outputs/figures/appendix/dataset_statistics")
+OUT_DIR = FIGURES_ROOT / "appendix/dataset_statistics"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 
@@ -139,7 +140,7 @@ def plot_sorted_attribute_barplot(attribute_counts, dataset_name, top_k=None, sp
         plt.close(fig)
 
 def main():
-    data_root = Path("/home/jokl/data/")
+    data_root = DATA_ROOT
 
     # syn_cub = CUBSyntheticDataset(
     #     root_dir=str(data_root / "syn_cub_dataset"),

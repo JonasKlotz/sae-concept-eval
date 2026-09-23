@@ -10,7 +10,7 @@ import rootutils
 
 root = rootutils.setup_root(__file__, dotenv=True, pythonpath=True, cwd=False)
 
-from utils import resolvers  # noqa: F401 ensures resolver is registered
+from src.utils import resolvers  # noqa: F401 ensures resolver is registered
 
 import os
 from pathlib import Path
@@ -20,14 +20,15 @@ import numpy as np
 import matplotlib.pyplot as plt
 import torch
 
-from scripts.visualization.plot_utils.plot_utils import COLORS, pretty_sae_family, pretty_metric_name, get_metric_color, save_legend_strip
+from src.scripts.visualization.plot_utils.plot_utils import COLORS, pretty_sae_family, pretty_metric_name, get_metric_color, save_legend_strip
 
 SHOW_PLOTS = True  # set to False when running in batch/headless mode
-from scripts.visualization.plot_utils.plot_data_utils import (
+from src.scripts.visualization.plot_utils.plot_data_utils import (
     load_nested_pt_tree,
     keep_ground_truth_per_method,
     extract_matching_scores, calc_matching_score_over_all_attrs_df,
 )
+from src.utils.paths import FIGURES_ROOT, METRICS_ROOT
 
 def plot_matching_vs_dictsize_df(
     df,  # expected columns: ["sae", "dict_size", "metric_name", "matching_score"]
@@ -209,8 +210,8 @@ def plot_matching_vs_dictsize_df(
 
 
 def fig_unnormalized_matching_dict_size():
-    metrics_root = "/home/jokl/PycharmProjects/rs_concepts/outputs/metrics"
-    figures_dir = Path("/home/jokl/PycharmProjects/rs_concepts/outputs/figures")
+    metrics_root = str(METRICS_ROOT)
+    figures_dir = FIGURES_ROOT
     loaded = load_nested_pt_tree(metrics_root)
 
     dataset_names = ["CUB_attrs", "COCO"]
@@ -231,7 +232,7 @@ def fig_unnormalized_matching_dict_size():
 
             # probe baseline (unchanged)
             probe_path = (
-                f"/home/jokl/PycharmProjects/rs_concepts/outputs/metrics/"
+                f"{METRICS_ROOT}/"
                 f"{dataset_name}/CLIP-ViT-L-14/42/matching/linear_probe/k=32/f1_matrix.pt"
             )
             probe_matching = torch.tensor(torch.load(probe_path, map_location="cpu", weights_only=False))

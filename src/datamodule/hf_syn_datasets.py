@@ -22,7 +22,7 @@ import torch
 from PIL import Image
 from torch.utils.data import Dataset
 
-from datamodule.coco_dataset import COCO_IDX2NAME
+from src.datamodule.coco_dataset import COCO_IDX2NAME
 
 NUM_CUB_ATTRS = 312
 NUM_CUB_CLASSES = 200
@@ -191,3 +191,17 @@ class SynCOCOHFDataset(_HFSynBase):
 
     def get_class_name(self, class_idx):
         return COCO_IDX2NAME.get(class_idx, f"class_{class_idx}")
+
+
+def load_syn_dataset(syn_cfg, dataset_name: str, transform=None):
+    """Open the synthetic paired benchmark described by ``cfg.dataset.syn``.
+
+    Uses ``syn_cfg.local_path`` if set, otherwise downloads ``syn_cfg.hf_repo``
+    at ``syn_cfg.revision`` from the Hub (cached by ``huggingface_hub``).
+    """
+    dataset_cls = {"CUB": SynCUBHFDataset, "COCO": SynCOCOHFDataset}[dataset_name]
+    if syn_cfg.get("local_path"):
+        return dataset_cls(root=syn_cfg.local_path, transform=transform)
+    return dataset_cls.from_hub(
+        syn_cfg.hf_repo, revision=syn_cfg.get("revision"), transform=transform
+    )

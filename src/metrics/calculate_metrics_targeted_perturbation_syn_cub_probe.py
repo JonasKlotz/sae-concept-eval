@@ -1,11 +1,8 @@
 import os
-import sys
 
 from torch import Tensor
 
 
-sys.path.append("/home/htc/jklotz/git/rs_concepts_public/src")
-sys.path.append("/home/htc/jklotz/git/rs_concepts_public/src")
 import hydra
 import rootutils
 from torch.utils.data import DataLoader
@@ -33,7 +30,7 @@ from src.utils.data_utils import load_embedding_datamodule, load_image_datamodul
 from src.metrics.calculate_metrics_gt_concept import calculate_gt_metric
 from src.datamodule.CUB_syn_dataset import CUBSyntheticDataset
 from src.datamodule.cub_datamodule import CUBDataset
-from utils.data_utils import save_metric_results
+from src.utils.data_utils import save_metric_results
 
 from src.metrics.probe_based.linear_probe import (
     LinearAttrPredictor,

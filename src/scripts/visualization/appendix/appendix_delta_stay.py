@@ -28,18 +28,18 @@ import numpy as np
 import pandas as pd
 from scipy.stats import pearsonr
 
-from scripts.visualization.plot_utils.plot_data_utils import parse_sae_run_name
-from scripts.visualization.plot_utils.plot_utils import (
+from src.scripts.visualization.plot_utils.plot_data_utils import parse_sae_run_name
+from src.scripts.visualization.plot_utils.plot_utils import (
     COLORS,
     pretty_sae_family,
     pretty_syn_dataset,
 )
+from src.utils.paths import FIGURES_ROOT, METRICS_ROOT
 
 SHOW_PLOTS = False  # batch/headless mode — figures saved to disk only
 
 
-METRICS_ROOT = Path("/home/jokl/PycharmProjects/rs_concepts/outputs/metrics")
-OUT_DIR = Path("/home/jokl/PycharmProjects/rs_concepts/outputs/figures/appendix/fig_delta_stay")
+OUT_DIR = FIGURES_ROOT / "appendix/fig_delta_stay"
 
 SYN_DATASETS = ("syn_cub_attrs", "syn_coco")
 MODEL_NAMES = ("CLIP-ViT-L-14",)

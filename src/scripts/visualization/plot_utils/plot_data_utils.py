@@ -12,7 +12,8 @@ from pathlib import Path
 from numpy import ndarray, dtype
 from pandas import DataFrame, Series
 
-from metrics.metric_utils import get_topk_matching
+from src.metrics.metric_utils import get_topk_matching
+from src.utils.paths import METRICS_ROOT
 
 root = Path(rootutils.setup_root(__file__, dotenv=True, pythonpath=True, cwd=False))
 
@@ -712,7 +713,7 @@ def get_perturbed_attr_ids(dataset: str) -> set[int]:
     if "cub" in dataset.lower():
         syn_dataset = "syn_cub_attrs"
         with open(
-                f"/home/jokl/PycharmProjects/rs_concepts/outputs/metrics/{syn_dataset}/all_attr_ids.txt",
+                f"{METRICS_ROOT}/{syn_dataset}/all_attr_ids.txt",
                 "r",
         ) as f:
             return {int(line.strip()) for line in f if line.strip()}

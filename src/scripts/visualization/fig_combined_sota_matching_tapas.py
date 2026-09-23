@@ -5,17 +5,18 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from scripts.visualization.plot_utils.plot_data_utils import (
+from src.scripts.visualization.plot_utils.plot_data_utils import (
     load_nested_pt_tree,
     convert_dataset_metrics_to_df,
     load_perturbation_dataframe,
 )
-from scripts.visualization.plot_utils.plot_data_utils import nonsyn_for_syn  # noqa: F401
-from scripts.visualization.plot_utils.plot_utils import (
+from src.scripts.visualization.plot_utils.plot_data_utils import nonsyn_for_syn  # noqa: F401
+from src.scripts.visualization.plot_utils.plot_utils import (
     pretty_metric_name,
     pretty_syn_dataset,
     COLORS, pretty_dataset,
 )
+from src.utils.paths import FIGURES_ROOT, METRICS_ROOT
 
 SHOW_PLOTS = True  # set to False when running in batch/headless mode
 
@@ -225,10 +226,10 @@ def _run_sota_pass(
 
 
 def fig_combined_sota_matching_tapas():
-    vis_dir = Path("/home/jokl/PycharmProjects/rs_concepts/outputs/figures/combined_sota_matching_tapas")
-    appendix_dir = Path("/home/jokl/PycharmProjects/rs_concepts/outputs/figures/appendix/combined_sota_nnomp")
+    vis_dir = FIGURES_ROOT / "combined_sota_matching_tapas"
+    appendix_dir = FIGURES_ROOT / "appendix/combined_sota_nnomp"
 
-    metrics_root = "/home/jokl/PycharmProjects/rs_concepts/outputs/metrics"
+    metrics_root = str(METRICS_ROOT)
     all_metrics = load_nested_pt_tree(metrics_root)
 
     model_name = "CLIP-ViT-L-14"

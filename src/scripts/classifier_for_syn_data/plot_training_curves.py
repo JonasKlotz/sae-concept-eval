@@ -1,6 +1,10 @@
 from pathlib import Path
 import pandas as pd
 import matplotlib.pyplot as plt
+import rootutils
+
+rootutils.setup_root(__file__, dotenv=True, pythonpath=True, cwd=False)
+from src.utils.paths import FIGURES_ROOT, OUTPUTS_ROOT  # noqa: E402
 
 
 def plot_all_in_one(
@@ -42,12 +46,8 @@ def plot_all_in_one(
 
 if __name__ == "__main__":
     dataset_name = "cub"
-    out_root = Path(
-        f"/scratch/htc/jklotz/outputs/concept_xai/classifier/{dataset_name}"
-    )
+    out_root = OUTPUTS_ROOT / "classifier" / dataset_name
     metrics_csv = out_root / "lightning_csv" / "version_1" / "metrics.csv"
-    plots_dir = Path(
-        f"/home/htc/jklotz/git/rs_concepts/plots/classifier/{dataset_name}"
-    )
+    plots_dir = FIGURES_ROOT / "classifier" / dataset_name
 
     plot_all_in_one(metrics_csv, plots_dir)

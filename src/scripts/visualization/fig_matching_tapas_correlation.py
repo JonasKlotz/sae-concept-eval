@@ -13,20 +13,21 @@ import rootutils
 
 root = rootutils.setup_root(__file__, dotenv=True, pythonpath=True, cwd=False)
 
-from utils import resolvers  # noqa: F401 ensures resolver is registered
+from src.utils import resolvers  # noqa: F401 ensures resolver is registered
 
 SHOW_PLOTS = True  # set to False when running in batch/headless mode
-from scripts.visualization.plot_utils.plot_data_utils import (
+from src.scripts.visualization.plot_utils.plot_data_utils import (
     load_matching_data,
     load_perturbation_dataframe, calc_matching_score_over_all_attrs_df, get_perturbed_attr_ids,
 )
-from scripts.visualization.plot_utils.plot_utils import (
+from src.scripts.visualization.plot_utils.plot_utils import (
     COLORS,
     pretty_metric_name,
     _parse_metric_triplet, pretty_syn_dataset,
 )
 
 import re
+from src.utils.paths import FIGURES_ROOT, METRICS_ROOT
 
 
 def _natural_key(s):
@@ -232,7 +233,7 @@ def fig_matching_tapas_correlation():
 
     for syn_dataset in syn_datasets:
         all_attr_ids = get_perturbed_attr_ids(syn_dataset)
-        metrics_root = "/home/jokl/PycharmProjects/rs_concepts/outputs/metrics"
+        metrics_root = str(METRICS_ROOT)
         metrics_syn_dir = Path(f"{metrics_root}/{syn_dataset}")
 
         steering_score_df = load_perturbation_dataframe(metrics_syn_dir, "bin_max_then_delta")
@@ -295,7 +296,7 @@ def fig_matching_tapas_correlation():
         df = df[df["sae"].isin(saes_delta)].copy()
 
         save_path = (
-            f"/home/jokl/PycharmProjects/rs_concepts/outputs/figures/fig_matching_vs_tapas/"
+            f"{FIGURES_ROOT}/fig_matching_vs_tapas/"
             f"{syn_dataset}/delta_matching_score_vs_tapas.png"
         )
         plot_matching_steering_correlation_scatter2(

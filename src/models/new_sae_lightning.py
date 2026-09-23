@@ -234,13 +234,14 @@ class LitSparseAutoencoder(pl.LightningModule):
         return acc_recon, acc_orig, preds, preds_orig
 
 
-def build_wandb_logger(run_name: str, tags: list, debug=False) -> WandbLogger:
+def build_wandb_logger(
+    run_name: str, tags: list, project: str, mode: str = "online"
+) -> WandbLogger:
     wandb_dir = root / "logs" / "wandb"
     wandb_dir.mkdir(parents=True, exist_ok=True)
-    mode = "offline" if not debug else "online"
     print(f"Using wandb mode: {mode}")
     return WandbLogger(
-        project="sae_training",
+        project=project,
         name=run_name,
         tags=tags,
         mode=mode,
@@ -284,13 +285,19 @@ def train_with_lightning(cfg: DictConfig, override: bool = False):
     tags = [
         cfg.dataset.name,
         cfg.model.model_identifier,
-        cfg.seed,
+        str(cfg.seed),
         cfg.train_sae.run_name,
     ]
-    debug = cfg.get("debug", False)
-    # wandb_logger = build_wandb_logger(run_name, tags, True)
-    # wandb_logger.log_hyperparams(OmegaConf.to_container(cfg, resolve=True))
-    base_logger = pl.loggers.CSVLogger(save_dir=output_root)
+    loggers = [pl.loggers.CSVLogger(save_dir=output_root)]
+    if cfg.train_sae.get("use_wandb", False):
+        wandb_logger = build_wandb_logger(
+            run_name,
+            tags,
+            project=cfg.train_sae.wandb_project,
+            mode=cfg.train_sae.get("wandb_mode", "online"),
+        )
+        wandb_logger.log_hyperparams(OmegaConf.to_container(cfg, resolve=True))
+        loggers.append(wandb_logger)
 
     callbacks = [
         pl.callbacks.ModelCheckpoint(
@@ -312,7 +319,7 @@ def train_with_lightning(cfg: DictConfig, override: bool = False):
         callbacks=callbacks,
         gradient_clip_val=True,
         log_every_n_steps=50,
-        logger=base_logger,
+        logger=loggers,
         default_root_dir=root / "logs" / "lightning" / run_name,
     )
     print(f"Fit model")

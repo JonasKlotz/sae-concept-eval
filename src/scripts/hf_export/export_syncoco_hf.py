@@ -19,13 +19,12 @@ written**. Images are copied byte-for-byte (no re-encoding).
 Usage::
 
     python src/scripts/hf_export/export_syncoco_hf.py \
-        --src-root /scratch/htc/jklotz/data/syn_coco_dataset \
-        --out-root /scratch/htc/jklotz/data/hf_export/syncoco
+        --src-root $DATA_ROOT/syn_coco_dataset \
+        --out-root $DATA_ROOT/hf_export/syncoco
 """
 
 import argparse
 import shutil
-import sys
 from pathlib import Path
 
 import pandas as pd
@@ -33,11 +32,8 @@ import rootutils
 from tqdm import tqdm
 
 _root = rootutils.setup_root(__file__, dotenv=True, pythonpath=True, cwd=False)
-# The package uses top-level imports (e.g. `from datamodule...`), so `src` must be
-# on the path. Derive it from the repo root to stay portable.
-sys.path.insert(0, str(Path(_root) / "src"))
 
-from datamodule.coco_dataset import COCOSynDataset, SYN_COCO_PATH
+from src.datamodule.coco_dataset import COCOSynDataset, SYN_COCO_PATH
 
 
 def build(src_root: str, out_root: str, overwrite: bool = False, limit: int | None = None) -> None:

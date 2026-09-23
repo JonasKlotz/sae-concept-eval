@@ -1,9 +1,6 @@
 import os
-import sys
 from pathlib import Path
 
-sys.path.append("/home/htc/jklotz/git/rs_concepts_public/src")
-sys.path.append("/home/htc/jklotz/git/rs_concepts_public/src")
 import hydra
 import numpy as np
 from sklearn.metrics import normalized_mutual_info_score

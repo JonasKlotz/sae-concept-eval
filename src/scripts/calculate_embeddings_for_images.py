@@ -1,8 +1,5 @@
 import os
-import sys
 
-sys.path.append("/home/htc/jklotz/git/rs_concepts_public/src")
-sys.path.append("/home/htc/jklotz/git/rs_concepts_public/src")
 
 
 from pathlib import Path

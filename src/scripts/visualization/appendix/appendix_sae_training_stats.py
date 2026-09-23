@@ -4,7 +4,8 @@ from pathlib import Path
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-from scripts.visualization.plot_utils.plot_utils import pretty_dataset, pretty_sae_family, COLORS
+from src.scripts.visualization.plot_utils.plot_utils import pretty_dataset, pretty_sae_family, COLORS
+from src.utils.paths import FIGURES_ROOT, METRICS_ROOT
 
 
 def load_sae_metric_results(metrics_dir):
@@ -192,8 +193,8 @@ def plot_sae_loss_scaling(df, save_path=None):
 
 
 def fig_sae_training_stats():
-    metrics_dir = "/home/jokl/Downloads/pluto3/metrics"
-    figures_dir = Path("/home/jokl/PycharmProjects/rs_concepts/outputs/figures/appendix")
+    metrics_dir = str(METRICS_ROOT)
+    figures_dir = FIGURES_ROOT / "appendix"
     df = load_sae_metric_results(metrics_dir)
     # save df to figures dir for later use
     df = df.sort_values(["dataset", "model", "sae", "dict_size"])

@@ -24,20 +24,21 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from scripts.visualization.fig_matching_over_dictsizes import _marker_for_metric
-from scripts.visualization.plot_utils.plot_data_utils import (
+from src.scripts.visualization.fig_matching_over_dictsizes import _marker_for_metric
+from src.scripts.visualization.plot_utils.plot_data_utils import (
     calc_matching_score_over_all_attrs_df,
     keep_ground_truth_per_method,
     load_nested_pt_tree,
     load_perturbation_dataframe,
     nonsyn_for_syn,
 )
-from scripts.visualization.plot_utils.plot_utils import (
+from src.scripts.visualization.plot_utils.plot_utils import (
     get_metric_color,
     pretty_metric_name,
     pretty_sae_family, pretty_dataset, pretty_syn_dataset,
     save_legend_strip,
 )
+from src.utils.paths import FIGURES_ROOT, METRICS_ROOT
 
 
 SHOW_PLOTS = True  # set to False when running in batch/headless mode
@@ -198,8 +199,8 @@ def _tapas_for_sparsity_sweep(
 
 
 def fig_sparsity_sweep():
-    metrics_root = "/home/jokl/PycharmProjects/rs_concepts/outputs/metrics"
-    figures_dir = Path("/home/jokl/PycharmProjects/rs_concepts/outputs/figures/appendix/fig_topk_sparsity_sweep")
+    metrics_root = str(METRICS_ROOT)
+    figures_dir = FIGURES_ROOT / "appendix/fig_topk_sparsity_sweep"
     figures_dir.mkdir(parents=True, exist_ok=True)
 
     metrics_to_keep = [

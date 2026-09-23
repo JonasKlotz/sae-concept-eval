@@ -7,8 +7,8 @@ prints distribution statistics. Run after exporting to "really double check".
 Usage::
 
     python src/scripts/hf_export/inspect_hf_export.py \
-        --cub-hf /scratch/htc/jklotz/data/hf_export/syncub \
-        --coco-hf /scratch/htc/jklotz/data/hf_export/syncoco
+        --cub-hf $DATA_ROOT/hf_export/syncub \
+        --coco-hf $DATA_ROOT/hf_export/syncoco
 """
 
 import argparse
@@ -21,7 +21,7 @@ import pandas as pd
 import rootutils
 
 _root = rootutils.setup_root(__file__, dotenv=True, pythonpath=True, cwd=False)
-sys.path.insert(0, str(Path(_root) / "src"))
+from src.utils.paths import DATA_ROOT  # noqa: E402
 
 NUM_CUB_ATTRS = 312
 NUM_CUB_CLASSES = 200
@@ -103,7 +103,7 @@ def inspect_cub(hf: str) -> bool:
 
 
 def inspect_coco(hf: str) -> bool:
-    from datamodule.coco_dataset import COCO_CLASSES
+    from src.datamodule.coco_dataset import COCO_CLASSES
 
     root = Path(hf)
     df = pd.read_csv(root / "metadata.csv")
@@ -155,8 +155,8 @@ def inspect_coco(hf: str) -> bool:
 
 def main() -> None:
     p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument("--cub-hf", default="/scratch/htc/jklotz/data/hf_export/syncub")
-    p.add_argument("--coco-hf", default="/scratch/htc/jklotz/data/hf_export/syncoco")
+    p.add_argument("--cub-hf", default=str(DATA_ROOT / "hf_export" / "syncub"))
+    p.add_argument("--coco-hf", default=str(DATA_ROOT / "hf_export" / "syncoco"))
     p.add_argument("--skip-cub", action="store_true")
     p.add_argument("--skip-coco", action="store_true")
     args = p.parse_args()

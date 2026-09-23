@@ -17,23 +17,23 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from scripts.visualization.plot_utils.plot_data_utils import (
+from src.scripts.visualization.plot_utils.plot_data_utils import (
     load_nested_pt_tree,
     keep_ground_truth_per_method,
     calc_matching_score_over_all_attrs_df,
     load_perturbation_dataframe,
 )
-from scripts.visualization.plot_utils.plot_utils import (
+from src.scripts.visualization.plot_utils.plot_utils import (
     pretty_sae_family,
     pretty_metric_name,
     _parse_metric_triplet,
     save_legend_strip,
 )
+from src.utils.paths import FIGURES_ROOT, METRICS_ROOT
 
 SHOW_PLOTS = True  # set to False when running in batch/headless mode
 
-METRICS_ROOT = "/home/jokl/PycharmProjects/rs_concepts/outputs/metrics"
-OUT_DIR = Path("/home/jokl/PycharmProjects/rs_concepts/outputs/figures/appendix/fig_coalition_size_sweep")
+OUT_DIR = FIGURES_ROOT / "appendix/fig_coalition_size_sweep"
 
 # -----------------------------------------------------------------------
 # Shared style tables

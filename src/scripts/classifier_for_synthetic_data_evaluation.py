@@ -1,13 +1,10 @@
 from __future__ import annotations
 
 import os
-import sys
 from pprint import pprint
 
 from tqdm import tqdm
 
-sys.path.append("/home/htc/jklotz/git/rs_concepts_public/src")
-sys.path.append("/home/htc/jklotz/git/rs_concepts_public/src")
 
 
 from pathlib import Path

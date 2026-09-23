@@ -2,7 +2,7 @@ import torch
 from tqdm import tqdm
 from torch.nn import functional as F
 
-from metrics.metric_utils import extract_concept_matrix
+from src.metrics.metric_utils import extract_concept_matrix
 from src.models import sae
 
 import os
@@ -15,7 +15,7 @@ from tqdm import tqdm
 import rootutils
 import pandas as pd
 
-from models.new_sae_lightning import LitSparseAutoencoder
+from src.models.new_sae_lightning import LitSparseAutoencoder
 
 # Set up project root
 project_root = Path(
